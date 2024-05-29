@@ -21,6 +21,7 @@ use sui_sdk::{
     SuiClient,
 };
 use sui_shared_crypto::intent::Intent;
+use tracing::info;
 
 pub const SUI_COIN_TYPE: &str = "0x2::sui::SUI";
 pub const MEME_MODULE: &str = "meme_coin";
@@ -42,7 +43,7 @@ impl Bot {
         }
 
         let address = addresses[0];
-        println!("address = {:?}", address);
+        info!("address = {:?}", address);
 
         Bot {
             key,
@@ -57,7 +58,7 @@ impl Bot {
             .coin_read_api()
             .get_coins(self.address, coin_type, None, None)
             .await?;
-        // println!("{:?}", coin);
+        // info!("{:?}", coin);
         Ok(coin)
     }
 
@@ -67,7 +68,7 @@ impl Bot {
             .coin_read_api()
             .get_coins(self.address, Some(SUI_COIN_TYPE.to_string()), None, None)
             .await?;
-        // println!("{:?}", coin);
+        // info!("{:?}", coin);
         let coin = coins.data.into_iter().next().unwrap();
         Ok(coin)
     }
@@ -111,7 +112,7 @@ pub struct MemeCoin {
 
 impl MemeCoin {
     pub async fn new(directory: String) -> Result<Self, Box<dyn std::error::Error>> {
-        println!("Deploying...");
+        info!("Deploying...");
 
         let output = Command::new("sui")
             .arg("client")
@@ -123,7 +124,7 @@ impl MemeCoin {
         let stdout = String::from_utf8_lossy(&output.stdout);
         let json_value: serde_json::Value = serde_json::from_str(&stdout)?;
 
-        println!("Deploying complete!");
+        info!("Deploying complete!");
         let events = json_value.get("events").ok_or("Missing 'events' field")?;
 
         let events: Vec<Event> = serde_json::from_value(events.clone())?;
@@ -143,7 +144,7 @@ impl MemeCoin {
     }
 
     pub async fn send_metadata(&self, recipeint: &str) -> Result<()> {
-        println!("Sending Metadata {:?}", self.metadata_id);
+        info!("Sending Metadata {:?}", self.metadata_id);
 
         let send_metadata_tx = self
             .bot
@@ -157,7 +158,7 @@ impl MemeCoin {
                 SuiAddress::from_str(recipeint)?,
             )
             .await?;
-        println!("{:?}", send_metadata_tx.clone());
+        info!("{:?}", send_metadata_tx.clone());
         let signature = self.bot.key.sign_secure(
             &self.bot.address,
             &send_metadata_tx,
@@ -174,7 +175,7 @@ impl MemeCoin {
             )
             .await?;
 
-        println!(
+        info!(
             "Transfer metadata_id = {:?} to recipeint = {:?} successfully! digest = {:?}",
             self.metadata_id, recipeint, response.digest
         );

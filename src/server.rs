@@ -1,3 +1,4 @@
+use actix_cors::Cors;
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use anyhow::Result;
 use log::info;
@@ -46,12 +47,21 @@ async fn create_coin(req_body: web::Json<CoinRequest>) -> impl Responder {
 }
 
 pub async fn run() -> Result<()> {
-    println!("Server is running on http://127.0.0.1:8080");
-
-    HttpServer::new(|| App::new().route("/create_coin", web::post().to(create_coin)))
-        .bind(("127.0.0.1", 8080))?
-        .run()
-        .await
-        .map_err(|e| anyhow::anyhow!(e))?;
+    let port = env::get_env("PORT").parse::<u16>()?;
+    let ip = env::get_env("IP");
+    info!("{}:{} Seerver Strating", ip, port);
+    HttpServer::new(|| {
+        App::new()
+            .wrap(
+                Cors::default()
+                    .allow_any_origin()
+                    .allowed_methods(vec!["POST"]),
+            )
+            .route("/create_coin", web::post().to(create_coin))
+    })
+    .bind((ip, port))?
+    .run()
+    .await
+    .map_err(|e| anyhow::anyhow!(e))?;
     Ok(())
 }

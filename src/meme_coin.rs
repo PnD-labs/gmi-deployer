@@ -47,7 +47,7 @@ impl Bot {
         Bot {
             key,
             address,
-            client: get_client("devnet").await,
+            client: get_client("testnet").await,
         }
     }
 

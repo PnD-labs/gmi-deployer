@@ -2,7 +2,7 @@
 
 [move]
 version = 2
-manifest_digest = "359FC5EB4628F50F39F9FDDA099F064A20D114A0256608610811CF71639CB514"
+manifest_digest = "AD2ED90D46FA33A54F16FD3575AFEDCEC4FFB1DC0F995F65CF7EC84EF57180CE"
 deps_digest = "3C4103934B1E040BB6B23F1D610B4EF9F2F1166A50A104EADCF77467C004C600"
 dependencies = [
   { name = "Amm" },
@@ -11,7 +11,7 @@ dependencies = [
 
 [[move.package]]
 name = "Amm"
-source = { local = "../amm" }
+source = { git = "https://github.com/PnD-labs/contracts.git", rev = "main", subdir = "amm" }
 
 dependencies = [
   { name = "Sui" },
@@ -30,7 +30,7 @@ dependencies = [
 ]
 
 [move.toolchain-version]
-compiler-version = "1.25.1"
+compiler-version = "1.26.0"
 edition = "2024.beta"
 flavor = "sui"
 
@@ -38,8 +38,8 @@ flavor = "sui"
 
 [env.testnet]
 chain-id = "4c78adac"
-original-published-id = "0x039b7ebb40799733e0dec652856eca983e2d107f090e49462f7e6178e174f837"
-latest-published-id = "0x039b7ebb40799733e0dec652856eca983e2d107f090e49462f7e6178e174f837"
+original-published-id = "0x31e2bcef9cc44c273d56674704abe10ec40d2ff9dc5d1fd2b23db2784316c506"
+latest-published-id = "0x31e2bcef9cc44c273d56674704abe10ec40d2ff9dc5d1fd2b23db2784316c506"
 published-version = "1"
 
 [env.devnet]

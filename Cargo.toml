@@ -17,3 +17,7 @@ sui-shared-crypto = { git = "https://github.com/mystenlabs/sui", package = "shar
 serde_json = "1.0.117"
 dotenv = "0.15.0"
 tokio = "1.37.0"
+tracing = "0.1.40"
+actix-cors = "0.7.0"
+openssl = "0.10.64"
+tracing-subscriber = "0.3.18"

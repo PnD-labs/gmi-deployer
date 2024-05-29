@@ -2,6 +2,7 @@ use actix_cors::Cors;
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use anyhow::Result;
 use log::info;
+use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 use serde::{Deserialize, Serialize};
 
 use crate::{env, meme_coin::MemeCoin};
@@ -49,6 +50,14 @@ async fn create_coin(req_body: web::Json<CoinRequest>) -> impl Responder {
 pub async fn run() -> Result<()> {
     let port = env::get_env("PORT").parse::<u16>()?;
     let ip = env::get_env("IP");
+    info!("{}:{} Server Strating", ip, port);
+
+    let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls())?;
+
+    builder.set_private_key_file("private.key", SslFiletype::PEM)?;
+    builder.set_certificate_chain_file("certificate.crt")?;
+    let port = env::get_env("PORT").parse::<u16>()?;
+    let ip = env::get_env("IP");
     info!("{}:{} Seerver Strating", ip, port);
     HttpServer::new(|| {
         App::new()
@@ -59,7 +68,7 @@ pub async fn run() -> Result<()> {
             )
             .route("/create_coin", web::post().to(create_coin))
     })
-    .bind((ip, port))?
+    .bind_openssl((ip, port), builder)?
     .run()
     .await
     .map_err(|e| anyhow::anyhow!(e))?;

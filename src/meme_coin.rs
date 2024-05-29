@@ -118,6 +118,7 @@ impl MemeCoin {
             .arg("client")
             .arg("publish")
             .arg("--json")
+            .arg("--skip-dependency-verification")
             .current_dir(directory)
             .output()?;
 

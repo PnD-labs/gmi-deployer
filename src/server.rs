@@ -52,10 +52,10 @@ pub async fn run() -> Result<()> {
     let ip = env::get_env("IP");
     info!("{}:{} Server Strating", ip, port);
 
-    let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls())?;
+    // let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls())?;
 
-    builder.set_private_key_file("private.key", SslFiletype::PEM)?;
-    builder.set_certificate_chain_file("certificate.crt")?;
+    // builder.set_private_key_file("private.key", SslFiletype::PEM)?;
+    // builder.set_certificate_chain_file("certificate.crt")?;
     let port = env::get_env("PORT").parse::<u16>()?;
     let ip = env::get_env("IP");
     info!("{}:{} Seerver Strating", ip, port);
@@ -68,7 +68,7 @@ pub async fn run() -> Result<()> {
             )
             .route("/create_coin", web::post().to(create_coin))
     })
-    .bind(format!("{}:{}", ip, port))?
+    .bind((ip.as_str(), port))?
     // .bind_openssl((ip, port), builder)?
     .run()
     .await

@@ -1,5 +1,5 @@
 use actix_cors::Cors;
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{http, web, App, HttpResponse, HttpServer, Responder};
 use anyhow::Result;
 use log::info;
 use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
@@ -64,7 +64,12 @@ pub async fn run() -> Result<()> {
             .wrap(
                 Cors::default()
                     .allow_any_origin()
-                    .allowed_methods(vec!["POST"]),
+                    .allowed_methods(vec!["POST"])
+                    .allowed_headers(vec![
+                        http::header::AUTHORIZATION,
+                        http::header::ACCEPT,
+                        http::header::CONTENT_TYPE,
+                    ]),
             )
             .route("/create_coin", web::post().to(create_coin))
     })

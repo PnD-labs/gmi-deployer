@@ -68,7 +68,7 @@ pub async fn run() -> Result<()> {
             )
             .route("/create_coin", web::post().to(create_coin))
     })
-    .bind_openssl((ip, port), builder)?
+    // .bind_openssl((ip, port), builder)?
     .run()
     .await
     .map_err(|e| anyhow::anyhow!(e))?;
